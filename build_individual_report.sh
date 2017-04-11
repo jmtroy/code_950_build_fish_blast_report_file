@@ -5,6 +5,7 @@ OUTPUT_DATA_FOLDER=$1
 PROJECT_INPUT_DATA_FOLDER=$2
 BLAST_RESULTS_FILE=$3
 DATA_SET_NAME=$4
+H3K4ME3_PEAK_FILE=$5
 
 # genscan data retrieval was not run on biocluster, but the data and screen shots from ucsc table browser
 # are in the folder below
@@ -83,9 +84,8 @@ paste $HDR_w_GENSCAN $NSCAN_BED_HDR > $HDR_w_GENSCAN_NSCAN
 awk -F"\t" -v OFS="\t" '{print $0,"overlap_[N-SCAN]"}' $HDR_w_GENSCAN_NSCAN > $TMP && mv $TMP $HDR_w_GENSCAN_NSCAN
 
 
-
 #
-# TEST AUGUSTUS EXONS
+#  AUGUSTUS EXONS
 #
 # AUGUSTUS data retrieval was not run on biocluster, but the data and screen shots from ucsc table browser
 # are in the folder below with the data file and header file.
@@ -95,7 +95,7 @@ BED_HDR=/home/groups/simons/Joe/sb_blast_project/input_data/AUGUSTUS/2017-02-12-
 sh add_data_to_results.sh $BED_w_GENSCAN_NSCAN $BED_FILE_CONVERTED $HDR_w_GENSCAN_NSCAN $BED_HDR "Augustus_exons" $OUTPUT_DATA_FOLDER
 
 #
-# TEST Human Protein Block Exons
+#  Human Protein Block Exons
 #
 # Human Protein data retrieval was not run on biocluster, but the data and screen shots from ucsc table browser
 # are in the folder below with the data file and header file.
@@ -105,7 +105,7 @@ BED_HDR=/home/groups/simons/Joe/sb_blast_project/input_data/Human_Blast_Track/20
 sh add_data_to_results.sh $BED_w_GENSCAN_NSCAN $BED_FILE_CONVERTED $HDR_w_GENSCAN_NSCAN $BED_HDR "HG18_blastp" $OUTPUT_DATA_FOLDER
 
 #
-# TEST genscan Exons
+#  genscan Exons
 #
 # genscan exon data retrieval was not run on biocluster, but the data and screen shots from ucsc table browser
 # are in the folder below with the data file and header file.
@@ -115,7 +115,7 @@ BED_HDR=/home/groups/simons/Joe/sb_blast_project/input_data/genscan_genes/2017-0
 sh add_data_to_results.sh $BED_w_GENSCAN_NSCAN $BED_FILE_CONVERTED $HDR_w_GENSCAN_NSCAN $BED_HDR "genscan_exon" $OUTPUT_DATA_FOLDER
 
 #
-# TEST N-scan Exons
+#  N-scan Exons
 #
 # N-SCAN exon data retrieval was not run on biocluster, but the data and screen shots from ucsc table browser
 # are in the folder below with the data file and header file.
@@ -123,6 +123,15 @@ BED_FILE_CONVERTED=/home/groups/simons/Joe/sb_blast_project/input_data/N-SCAN/20
 # for our report file we need a file with the NSCAN column names
 BED_HDR=/home/groups/simons/Joe/sb_blast_project/input_data/N-SCAN/2017-01-24-get-stickle-back-NSCAN-data/exon/stickleback_NSCAN_exons_bed_cols_header.txt
 sh add_data_to_results.sh $BED_w_GENSCAN_NSCAN $BED_FILE_CONVERTED $HDR_w_GENSCAN_NSCAN $BED_HDR "NSCAN_exons" $OUTPUT_DATA_FOLDER
+
+
+# check if there is a peak file, if so add it to the data set
+if [ -f $H3K4ME3_PEAK_FILE ]; then
+	# Added March 14, 2017 - call script to add closest peak (h3k4me3) to file.  Also update header.
+	FILE_TO_UPDATE="$BED_w_GENSCAN_NSCAN"
+	HDR_TO_UPDATE="$HDR_w_GENSCAN_NSCAN"
+	sh closest_peak.sh $OUTPUT_DATA_FOLDER $FILE_TO_UPDATE $HDR_TO_UPDATE $H3K4ME3_PEAK_FILE $DATA_SET_NAME 2>> closest_peak.errs
+fi
 
 
 # put the final header and final data together and write it out.

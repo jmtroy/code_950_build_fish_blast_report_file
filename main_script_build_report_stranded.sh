@@ -80,34 +80,42 @@ echo "The output folder is: $OUTPUT_DATA_FOLDER" >> "$RUN_LOG_FILE"
 #################################################################################################
 
 
-
 # get the BLAST results from a previous project
 BLAST_FILE_D30C_intERgenic="/home/groups/simons/Joe/sb_blast_project/20170125_run_blastx_with_intergenic_intragenic_exons/output_10_fish_blastx_RUN_20170125_202759/D30C_intERgenic/blast_results_fmt6_ftp_db.txt"
 BLAST_FILE_D30C_intRAgenic="/home/groups/simons/Joe/sb_blast_project/20170125_run_blastx_with_intergenic_intragenic_exons/output_10_fish_blastx_RUN_20170125_202759/D30C_intRAgenic/blast_results_fmt6_ftp_db.txt"
 BLAST_FILE_T30C_intERgenic="/home/groups/simons/Joe/sb_blast_project/20170125_run_blastx_with_intergenic_intragenic_exons/output_10_fish_blastx_RUN_20170125_202759/T30C_intERgenic/blast_results_fmt6_ftp_db.txt"
 BLAST_FILE_T30C_intRAgenic="/home/groups/simons/Joe/sb_blast_project/20170125_run_blastx_with_intergenic_intragenic_exons/output_10_fish_blastx_RUN_20170125_202759/T30C_intRAgenic/blast_results_fmt6_ftp_db.txt"
 
+# create variables for the POS ANNOtation and PEAK files created by Chris Seward
+# annotation
+D_H3K4ME3_POS_ANNO=/home/groups/simons/Joe/sb_blast_project/input_data/sb_histone_mark_data/peaks/fish/S1/253+254-255_Fish_D_C4_30_H3k4Me3_S1-anno.pos
+# peaks
+D_H3K4ME3_POS_PEAK=/home/groups/simons/Joe/sb_blast_project/input_data/sb_histone_mark_data/peaks/fish/S1/253+254-255_Fish_D_C4_30_H3k4Me3_S1.pos
+# create names for the new combined annotation and peaks files
+D_H3K4ME3_DATA="$OUTPUT_DATA_FOLDER"/D_h3k4me3_data.bed
+# call scripts to populate new ew combined annotation and peaks files
+sh merge_anno_peak_pos_files.sh $D_H3K4ME3_POS_ANNO $D_H3K4ME3_POS_PEAK $D_H3K4ME3_DATA $OUTPUT_DATA_FOLDER
 
 BLAST_RESULTS_FILE="$BLAST_FILE_D30C_intERgenic"
 DATA_SET_NAME="D30C_intERgenic_Exons"
-sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" 
+sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" "$D_H3K4ME3_DATA"
 
 BLAST_RESULTS_FILE="$BLAST_FILE_D30C_intRAgenic"
 DATA_SET_NAME="D30C_intRAgenic_Exons"
-sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" 
+sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" "$D_H3K4ME3_DATA"
 
 BLAST_RESULTS_FILE="$BLAST_FILE_T30C_intERgenic"
 DATA_SET_NAME="T30C_intERgenic_Exons"
-sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" 
+sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" "$D_H3K4ME3_DATA"
 
 BLAST_RESULTS_FILE="$BLAST_FILE_T30C_intRAgenic"
 DATA_SET_NAME="T30C_intRAgenic_Exons"
-sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" 
+sh build_individual_report.sh "$OUTPUT_DATA_FOLDER" "$INPUT_DATA_FOLDER" "$BLAST_RESULTS_FILE" "$DATA_SET_NAME" "$D_H3K4ME3_DATA"
 
 
 
 #
-# We want to check how our all data set report compares to the NCBI 37.2 gtf file we used
+# We want to check how our all data set report compares to the gtf file we used
 # remember: we are looking trying to analyze exons that do not have annotation
 #
 ALL_DATA_SET_REPORT="$OUTPUT_DATA_FOLDER"/all_data_set_report.txt
